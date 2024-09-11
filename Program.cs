@@ -1,6 +1,10 @@
+using JwtAspNet.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+builder.Services.AddTransient<TokenService>();
+
+app.MapGet("/", (TokenService service) => service.CreateToken());
 
 app.Run();
