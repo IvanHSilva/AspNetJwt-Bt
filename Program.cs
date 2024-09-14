@@ -1,10 +1,16 @@
+using JwtAspNet.Models;
 using JwtAspNet.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-var app = builder.Build();
-
 builder.Services.AddTransient<TokenService>();
 
-app.MapGet("/", (TokenService service) => service.CreateToken());
+var app = builder.Build();
+app.MapGet("/", (TokenService service) => 
+    {
+        User user = new(1, "Ivan Henriques", "ivanhenriques@gmail.com",
+            "ihs.jpg", "abdefghi", ["student", "premium"]);
+        return service.CreateToken(user);
+    }
+);
 
 app.Run();
