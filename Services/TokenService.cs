@@ -30,11 +30,11 @@ public class TokenService {
     private static ClaimsIdentity GenerateClaims(User user) {
         
         ClaimsIdentity claims = new();
-        claims.AddClaim(new Claim("Id", user.Id.ToString()));
+        claims.AddClaim(new Claim("id", user.Id.ToString()));
         claims.AddClaim(new Claim(ClaimTypes.Name, user.Email));
         claims.AddClaim(new Claim(ClaimTypes.Email, user.Email));
         claims.AddClaim(new Claim(ClaimTypes.GivenName, user.Name));
-        claims.AddClaim(new Claim("Image", user.Image));
+        claims.AddClaim(new Claim("image", user.Image));
 
         foreach (string role in user.Roles)
             claims.AddClaim(new Claim(ClaimTypes.Role, role));
