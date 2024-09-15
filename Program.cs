@@ -17,18 +17,22 @@ builder.Services.AddAuthentication(a => {
         ValidateAudience = false
     };
 });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Admin", p => p.RequireRole("admin"));
 
 var app = builder.Build();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", (TokenService service) => 
+app.MapGet("/Login", (TokenService service) => 
     {
         User user = new(1, "Ivan Henriques", "ivanhenriques@gmail.com",
             "ihs.jpg", "abdefghi", ["student", "premium"]);
         return service.CreateToken(user);
     }
 );
+
+app.MapGet("/restrict", ()=> "Acesso autorizado!").RequireAuthorization();
+app.MapGet("/admin", () => "Acesso autorizado!").RequireAuthorization("admin");
 
 app.Run();
