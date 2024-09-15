@@ -3,6 +3,7 @@ using JwtAspNet.Models;
 using JwtAspNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,7 +33,13 @@ app.MapGet("/Login", (TokenService service) =>
     }
 );
 
-app.MapGet("/restrict", ()=> "Acesso autorizado!").RequireAuthorization();
+app.MapGet("/restrict", (ClaimsPrincipal user) => new {
+    id = user.Claims.First(c => c.Type == "id").Value,
+    name = user.Claims.First(c => c.Type == ClaimTypes.Name).Value,
+    email = user.Claims.First(c => c.Type == ClaimTypes.Email).Value,
+    givenName = user.Claims.First(c => c.Type == ClaimTypes.GivenName).Value,
+    image = user.Claims.First(c => c.Type == "image").Value,
+}).RequireAuthorization();
 app.MapGet("/admin", () => "Acesso autorizado!").RequireAuthorization("admin");
 
 app.Run();
